@@ -1,0 +1,1 @@
+Este repositório contém apenas materiais públicos de demonstração. Arquivos internos do sistema, regras privadas, credenciais e conectores foram excluídos deliberadamente.

@@ -1,0 +1,492 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Apresentação Executiva VivaCasa</title>
+  <style>
+    :root {
+      --verde-viva: #1F6B5C;
+      --terracota-casa: #D87855;
+      --areia-clara: #F5EFE6;
+      --grafite: #253238;
+      --cinza-nevoa: #D8E0DC;
+      --branco: #fffaf4;
+      --alerta: #E2B84B;
+      --risco: #B9534B;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: #e8ddd0;
+      color: var(--grafite);
+      font-family: Inter, Arial, sans-serif;
+      line-height: 1.35;
+    }
+
+    .deck {
+      display: grid;
+      gap: 28px;
+      width: min(1180px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 28px 0;
+    }
+
+    .slide {
+      position: relative;
+      aspect-ratio: 16 / 9;
+      min-height: 520px;
+      padding: 42px 48px 38px;
+      background: var(--areia-clara);
+      border: 1px solid var(--cinza-nevoa);
+      box-shadow: 0 18px 46px rgba(37, 50, 56, 0.16);
+      overflow: hidden;
+    }
+
+    .slide::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto;
+      height: 8px;
+      background: linear-gradient(90deg, var(--verde-viva), var(--terracota-casa));
+    }
+
+    .vc {
+      position: absolute;
+      top: 28px;
+      right: 36px;
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      border: 2px solid var(--verde-viva);
+      background: var(--branco);
+      color: var(--verde-viva);
+      font-family: Montserrat, Arial, sans-serif;
+      font-weight: 800;
+    }
+
+    .slide-no {
+      position: absolute;
+      right: 38px;
+      bottom: 24px;
+      color: #718087;
+      font-size: 0.8rem;
+    }
+
+    h1, h2, h3 {
+      margin: 0;
+      color: var(--verde-viva);
+      font-family: Montserrat, Arial, sans-serif;
+      letter-spacing: 0;
+    }
+
+    h1 { max-width: 760px; font-size: clamp(2rem, 4vw, 3.8rem); line-height: 1.02; }
+    h2 { max-width: 820px; font-size: clamp(1.7rem, 3vw, 2.7rem); line-height: 1.05; }
+    h3 { font-size: 1rem; margin-bottom: 8px; color: var(--grafite); }
+
+    .kicker {
+      margin-bottom: 12px;
+      color: var(--terracota-casa);
+      font-weight: 800;
+      text-transform: uppercase;
+      font-size: 0.82rem;
+    }
+
+    .message {
+      margin: 12px 0 22px;
+      max-width: 920px;
+      font-size: clamp(1rem, 1.5vw, 1.25rem);
+      color: #3f5056;
+    }
+
+    .notice {
+      display: inline-block;
+      margin-top: 26px;
+      padding: 10px 12px;
+      background: #fff7df;
+      border-left: 5px solid var(--alerta);
+      font-weight: 800;
+    }
+
+    .footer {
+      position: absolute;
+      left: 48px;
+      right: 110px;
+      bottom: 22px;
+      color: #65747a;
+      font-size: 0.75rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .three-col {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .card {
+      padding: 16px;
+      background: var(--branco);
+      border: 1px solid var(--cinza-nevoa);
+      border-radius: 8px;
+    }
+
+    .label {
+      color: #65747a;
+      font-size: 0.76rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .value {
+      margin-top: 8px;
+      color: var(--grafite);
+      font-size: 2rem;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .bad { color: var(--risco); }
+    .good { color: var(--verde-viva); }
+    .accent { color: var(--terracota-casa); }
+
+    ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    li { margin: 7px 0; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.86rem;
+      background: var(--branco);
+      border: 1px solid var(--cinza-nevoa);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 8px 9px;
+      border-bottom: 1px solid var(--cinza-nevoa);
+      text-align: left;
+      vertical-align: middle;
+    }
+
+    th {
+      color: var(--verde-viva);
+      font-size: 0.74rem;
+      text-transform: uppercase;
+    }
+
+    .bar-track {
+      width: 100%;
+      height: 10px;
+      background: #edf1ee;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .bar {
+      height: 100%;
+      background: var(--verde-viva);
+    }
+
+    .bar.target { background: var(--terracota-casa); }
+    .bar.risk { background: var(--risco); }
+    .bar.warn { background: var(--alerta); }
+
+    .mini-chart {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 8px;
+      align-items: end;
+      height: 210px;
+      padding: 18px 12px 8px;
+      background: var(--branco);
+      border: 1px solid var(--cinza-nevoa);
+      border-radius: 8px;
+    }
+
+    .month {
+      display: grid;
+      grid-template-rows: 1fr auto;
+      gap: 7px;
+      height: 100%;
+    }
+
+    .pair {
+      display: flex;
+      gap: 4px;
+      align-items: end;
+      height: 168px;
+    }
+
+    .col {
+      flex: 1;
+      min-width: 8px;
+      border-radius: 3px 3px 0 0;
+    }
+
+    .month-label {
+      text-align: center;
+      font-size: 0.72rem;
+      color: #65747a;
+    }
+
+    .tag {
+      display: inline-block;
+      margin-right: 6px;
+      padding: 4px 7px;
+      border-radius: 999px;
+      background: var(--branco);
+      border: 1px solid var(--cinza-nevoa);
+      color: #536167;
+      font-size: 0.74rem;
+      font-weight: 800;
+    }
+
+    .matrix {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .big-number {
+      font-size: clamp(2.8rem, 7vw, 5.2rem);
+      font-weight: 800;
+      color: var(--verde-viva);
+      line-height: 0.95;
+      font-family: Montserrat, Arial, sans-serif;
+    }
+
+    @media (max-width: 900px) {
+      .slide {
+        min-height: auto;
+        padding: 34px 28px 48px;
+      }
+      .two-col, .three-col, .matrix { grid-template-columns: 1fr; }
+      .footer { left: 28px; right: 80px; }
+      .vc { right: 24px; }
+    }
+
+    @media print {
+      body { background: white; }
+      .deck { width: 100%; padding: 0; gap: 0; }
+      .slide {
+        width: 100vw;
+        min-height: auto;
+        box-shadow: none;
+        border: 0;
+        page-break-after: always;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="deck">
+    <section class="slide" data-slide="1">
+      <div class="vc">VC</div>
+      <p class="kicker">Diagnóstico executivo</p>
+      <h1>VivaCasa Q4 2026</h1>
+      <p class="message">Crescimento rentavel, margem, ruptura, marketing e decisoes prioritarias para os proximos 90 dias.</p>
+      <div class="notice">Dados fictícios para demonstração</div>
+      <div class="three-col" style="margin-top: 28px; max-width: 760px;">
+        <div class="card"><div class="label">Periodo analisado</div><div class="value" style="font-size: 1.2rem;">Jan a ago 2026</div></div>
+        <div class="card"><div class="label">Formato</div><div class="value" style="font-size: 1.2rem;">16:9</div></div>
+        <div class="card"><div class="label">Base</div><div class="value" style="font-size: 1.2rem;">Intake e CSVs</div></div>
+      </div>
+      <p class="message" style="font-size: 0.9rem;">Identidade visual aplicada: Verde Viva, Terracota Casa, Areia Clara e Grafite.</p>
+      <div class="footer">VivaCasa | Confidencial | Dados fictícios para demonstração | Fontes: diagnóstico executivo, intake processado, indicadores e template de apresentação</div>
+      <div class="slide-no">1/10</div>
+    </section>
+
+    <section class="slide" data-slide="2">
+      <div class="vc">VC</div>
+      <p class="kicker">Resumo executivo</p>
+      <h2>A queda de eficiencia aparece como um problema integrado, nao como um indicador isolado.</h2>
+      <div class="three-col" style="margin-top: 26px;">
+        <div class="card"><div class="label">Fato</div><p>Receita abaixo da meta, margem abaixo de 32%, ruptura crescente e conversão paga em queda.</p></div>
+        <div class="card"><div class="label">Hipótese</div><p>Campanhas, disponibilidade, mix e margem podem estar desalinhados.</p></div>
+        <div class="card"><div class="label">Recomendação</div><p>Validar fórmulas, reconciliar fontes e bloquear aumento de midia paga antes de checar estoque promovido.</p></div>
+      </div>
+      <p class="message"><span class="tag">Fatos separados de hipóteses</span><span class="tag">Dados fictícios</span><span class="tag">Periodo: jan a ago 2026</span></p>
+      <div class="footer">Fontes: outputs/analysis/diagnostico-executivo-vivacasa.md; intake/processed/analise-completa-do-intake.md</div>
+      <div class="slide-no">2/10</div>
+    </section>
+
+    <section class="slide" data-slide="3">
+      <div class="vc">VC</div>
+      <p class="kicker">Receita versus meta</p>
+      <h2>O acumulado ficou R$ 740 mil abaixo da meta, 6,55% abaixo do planejado.</h2>
+      <div class="three-col" style="margin-top: 20px;">
+        <div class="card"><div class="label">Realizado</div><div class="value good">R$ 10,55 mi</div></div>
+        <div class="card"><div class="label">Meta</div><div class="value">R$ 11,29 mi</div></div>
+        <div class="card"><div class="label">Gap</div><div class="value bad">-6,55%</div></div>
+      </div>
+      <div class="mini-chart" aria-label="Receita versus meta por mes">
+        <div class="month"><div class="pair"><div class="col bar" style="height:82.7%"></div><div class="col bar target" style="height:88.0%"></div></div><div class="month-label">Jan</div></div>
+        <div class="month"><div class="pair"><div class="col bar" style="height:84.0%"></div><div class="col bar target" style="height:89.3%"></div></div><div class="month-label">Fev</div></div>
+        <div class="month"><div class="pair"><div class="col bar" style="height:86.7%"></div><div class="col bar target" style="height:91.3%"></div></div><div class="month-label">Mar</div></div>
+        <div class="month"><div class="pair"><div class="col bar" style="height:88.0%"></div><div class="col bar target" style="height:93.3%"></div></div><div class="month-label">Abr</div></div>
+        <div class="month"><div class="pair"><div class="col bar" style="height:90.0%"></div><div class="col bar target" style="height:95.3%"></div></div><div class="month-label">Mai</div></div>
+        <div class="month"><div class="pair"><div class="col bar" style="height:88.7%"></div><div class="col bar target" style="height:96.7%"></div></div><div class="month-label">Jun</div></div>
+        <div class="month"><div class="pair"><div class="col bar" style="height:92.0%"></div><div class="col bar target" style="height:98.7%"></div></div><div class="month-label">Jul</div></div>
+        <div class="month"><div class="pair"><div class="col bar" style="height:91.3%"></div><div class="col bar target" style="height:100%"></div></div><div class="month-label">Ago</div></div>
+      </div>
+      <div class="footer">Fato calculado | Fonte: intake/processed/analise-completa-do-intake.md | Base: resultados-vendas-2025-2026.csv</div>
+      <div class="slide-no">3/10</div>
+    </section>
+
+    <section class="slide" data-slide="4">
+      <div class="vc">VC</div>
+      <p class="kicker">Margem de contribuicao</p>
+      <h2>A margem media ficou em 30,40%, abaixo da meta fictícia de 32%.</h2>
+      <div class="two-col" style="margin-top: 26px;">
+        <div>
+          <div class="big-number">30,40%</div>
+          <p class="message">Media simples de janeiro a agosto de 2026. A media ponderada calculada no diagnóstico e 30,41%.</p>
+        </div>
+        <table>
+          <thead><tr><th>Tipo</th><th>Conteudo</th></tr></thead>
+          <tbody>
+            <tr><td>Fato</td><td>Todos os meses ficaram abaixo da meta de 32%.</td></tr>
+            <tr><td>Hipótese</td><td>Descontos, comissoes e midia podem reduzir contribuicao.</td></tr>
+            <tr><td>Validação</td><td>Formula e custos por canal seguem a validar.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="footer">Fontes: outputs/analysis/diagnostico-executivo-vivacasa.md; data/indicadores/margem-contribuicao.md</div>
+      <div class="slide-no">4/10</div>
+    </section>
+
+    <section class="slide" data-slide="5">
+      <div class="vc">VC</div>
+      <p class="kicker">Ruptura e estoque</p>
+      <h2>A ruptura aumentou em todas as categorias analisadas.</h2>
+      <div class="two-col" style="margin-top: 22px;">
+        <table>
+          <thead><tr><th>Categoria</th><th>Jan</th><th>Ago</th><th>Variação</th></tr></thead>
+          <tbody>
+            <tr><td>Organização</td><td>8,2%</td><td>11,8%</td><td>+3,6 p.p.</td></tr>
+            <tr><td>Cozinha e mesa</td><td>7,1%</td><td>10,3%</td><td>+3,2 p.p.</td></tr>
+            <tr><td>Decoração</td><td>6,4%</td><td>9,1%</td><td>+2,7 p.p.</td></tr>
+            <tr><td>Banheiro e lavanderia</td><td>5,8%</td><td>8,6%</td><td>+2,8 p.p.</td></tr>
+            <tr><td>Pequenos móveis</td><td>4,9%</td><td>7,8%</td><td>+2,9 p.p.</td></tr>
+          </tbody>
+        </table>
+        <div class="card">
+          <h3>Separação critica</h3>
+          <p><strong>Fato:</strong> ruptura subiu por categoria.</p>
+          <p><strong>Hipótese:</strong> ruptura pode prejudicar conversão em itens de maior margem.</p>
+          <p><strong>Validação:</strong> separar ruptura real de erro de cadastro, estoque reservado e atraso de integração.</p>
+        </div>
+      </div>
+      <div class="footer">Fontes: intake/processed/analise-completa-do-intake.md; data/indicadores/ruptura.md</div>
+      <div class="slide-no">5/10</div>
+    </section>
+
+    <section class="slide" data-slide="6">
+      <div class="vc">VC</div>
+      <p class="kicker">Marketing, conversão e CAC</p>
+      <h2>Canais pagos receberam mais investimento, mas perderam conversão.</h2>
+      <table style="margin-top: 22px;">
+        <thead><tr><th>Canal</th><th>Invest. jan</th><th>Invest. ago</th><th>Conv. jan</th><th>Conv. ago</th><th>CAC ago</th></tr></thead>
+        <tbody>
+          <tr><td>Busca paga</td><td>R$ 82 mil</td><td>R$ 108 mil</td><td>2,8%</td><td>2,5%</td><td>R$ 45,19</td></tr>
+          <tr><td>Social paga</td><td>R$ 76 mil</td><td>R$ 99 mil</td><td>2,1%</td><td>1,9%</td><td>R$ 52,38</td></tr>
+          <tr><td>E-mail</td><td>R$ 18 mil</td><td>R$ 22 mil</td><td>7,1%</td><td>7,8%</td><td>R$ 18,44</td></tr>
+          <tr><td>WhatsApp autorizado</td><td>R$ 9 mil</td><td>R$ 14 mil</td><td>8,4%</td><td>9,1%</td><td>R$ 12,75</td></tr>
+          <tr><td>Organico</td><td>R$ 0</td><td>R$ 0</td><td>3,5%</td><td>3,8%</td><td>R$ 0,00</td></tr>
+        </tbody>
+      </table>
+      <p class="message"><strong>Limitação:</strong> CAC e informado no CSV, mas nao pode ser recalculado sem clientes novos por canal.</p>
+      <div class="footer">Fontes: outputs/analysis/diagnostico-executivo-vivacasa.md; data/indicadores/cac-por-canal.md; data/indicadores/conversão.md</div>
+      <div class="slide-no">6/10</div>
+    </section>
+
+    <section class="slide" data-slide="7">
+      <div class="vc">VC</div>
+      <p class="kicker">Voz do cliente</p>
+      <h2>Clientes valorizam retirada em loja, mas indisponibilidade aparece como sinal relevante.</h2>
+      <div class="matrix" style="margin-top: 24px;">
+        <div class="card"><div class="label">Retirada em loja conveniente</div><div class="value good">83%</div></div>
+        <div class="card"><div class="label">Organização das lojas positiva</div><div class="value good">81%</div></div>
+        <div class="card"><div class="label">Encontrou o produto desejado</div><div class="value">78%</div></div>
+        <div class="card"><div class="label">Relatou produto indisponivel</div><div class="value bad">19%</div></div>
+      </div>
+      <p class="message"><strong>Hipótese:</strong> o sinal de indisponibilidade reforca investigar ruptura, mas a pesquisa nao prova causalidade.</p>
+      <div class="footer">Fonte: intake/processed/analise-completa-do-intake.md | Pesquisa nao probabilistica | Dados fictícios</div>
+      <div class="slide-no">7/10</div>
+    </section>
+
+    <section class="slide" data-slide="8">
+      <div class="vc">VC</div>
+      <p class="kicker">Diagnóstico integrado</p>
+      <h2>O gargalo provavel esta na conexao entre demanda, estoque, mix e margem.</h2>
+      <div class="matrix" style="margin-top: 24px;">
+        <div class="card"><h3>Fato</h3><p>Receita abaixo da meta e margem abaixo de 32%.</p></div>
+        <div class="card"><h3>Fato</h3><p>Ruptura aumentou em todas as categorias analisadas.</p></div>
+        <div class="card"><h3>Fato</h3><p>Busca paga e social paga perderam conversão com mais investimento.</p></div>
+        <div class="card"><h3>Hipótese</h3><p>Campanhas podem estar conectadas a produtos sem disponibilidade ou contribuicao adequada.</p></div>
+      </div>
+      <p class="message"><strong>Recomendação:</strong> nao tratar midia, estoque e margem em trilhas separadas.</p>
+      <div class="footer">Fontes: diagnostico-executivo-vivacasa.md; analise-completa-do-intake.md; data/indicadores/</div>
+      <div class="slide-no">8/10</div>
+    </section>
+
+    <section class="slide" data-slide="9">
+      <div class="vc">VC</div>
+      <p class="kicker">Plano de ação de 90 dias</p>
+      <h2>Os próximos 90 dias devem estabilizar metricas, estoque e decisao comercial.</h2>
+      <table style="margin-top: 22px;">
+        <thead><tr><th>Horizonte</th><th>Ação</th><th>Indicador</th></tr></thead>
+        <tbody>
+          <tr><td>Dias 1 a 15</td><td>Validar fórmulas de receita, margem, ruptura, conversão e CAC.</td><td>Definicoes aprovadas</td></tr>
+          <tr><td>Dias 1 a 15</td><td>Corrigir divergencia numerica do recibo anterior.</td><td>Receita, meta e gap corretos</td></tr>
+          <tr><td>Dias 16 a 30</td><td>Montar painel inicial com fonte e status de validação.</td><td>Dashboard simples</td></tr>
+          <tr><td>Dias 16 a 30</td><td>Criar rotina semanal de SKUs em risco.</td><td>Ruptura semanal</td></tr>
+          <tr><td>Dias 31 a 60</td><td>Cruzar campanhas pagas com disponibilidade e margem.</td><td>Conversão, CAC e ruptura</td></tr>
+          <tr><td>Dias 61 a 90</td><td>Formalizar cadência mensal e politica de descontos.</td><td>Revisao executiva e margem</td></tr>
+        </tbody>
+      </table>
+      <div class="footer">Fonte: outputs/analysis/diagnostico-executivo-vivacasa.md | Recomendações, não fatos confirmados</div>
+      <div class="slide-no">9/10</div>
+    </section>
+
+    <section class="slide" data-slide="10">
+      <div class="vc">VC</div>
+      <p class="kicker">Decisões solicitadas</p>
+      <h2>A diretoria precisa aprovar métricas, limites e donos antes da execucao.</h2>
+      <div class="two-col" style="margin-top: 24px;">
+        <ul>
+          <li>Aprovar definicoes oficiais de receita líquida e margem de contribuição.</li>
+          <li>Aprovar SKUs prioritários e criterio de ruptura monitorada.</li>
+          <li>Definir limite de midia antes da correcao de estoque.</li>
+          <li>Nomear responsaveis pelo plano de 90 dias.</li>
+          <li>Definir limite de desconto por categoria.</li>
+        </ul>
+        <div class="card">
+          <h3>Condição de uso</h3>
+          <p>Todos os dados sao fictícios. As decisoes reais exigem validação das fontes, formulas, cancelamentos, devolucoes, atribuicao e dados ausentes.</p>
+        </div>
+      </div>
+      <div class="footer">Fontes: outputs/analysis/diagnostico-executivo-vivacasa.md; templates/presentations/executive-review-vivacasa.md</div>
+      <div class="slide-no">10/10</div>
+    </section>
+  </main>
+</body>
+</html>

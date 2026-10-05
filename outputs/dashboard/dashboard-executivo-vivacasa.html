@@ -1,0 +1,499 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard Executivo VivaCasa</title>
+  <style>
+    :root {
+      --verde-viva: #1F6B5C;
+      --terracota-casa: #D87855;
+      --areia-clara: #F5EFE6;
+      --grafite: #253238;
+      --cinza-nevoa: #D8E0DC;
+      --amarelo-alerta: #E2B84B;
+      --vermelho-risco: #B9534B;
+      --branco: #fffaf4;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--grafite);
+      background: var(--areia-clara);
+      font-family: Inter, Arial, sans-serif;
+      line-height: 1.45;
+    }
+
+    .shell {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 24px 0 40px;
+    }
+
+    header {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 18px;
+      align-items: start;
+      padding: 22px 0 18px;
+      border-bottom: 1px solid var(--cinza-nevoa);
+    }
+
+    h1, h2, h3 {
+      margin: 0;
+      font-family: Montserrat, Arial, sans-serif;
+      color: var(--verde-viva);
+      letter-spacing: 0;
+    }
+
+    h1 { font-size: clamp(1.7rem, 3vw, 2.45rem); }
+    h2 { font-size: 1.05rem; margin-bottom: 14px; }
+    h3 { font-size: 0.95rem; }
+
+    .subtitle {
+      margin: 8px 0 0;
+      max-width: 760px;
+      color: #405057;
+    }
+
+    .vc-mark {
+      display: grid;
+      place-items: center;
+      width: 54px;
+      height: 54px;
+      border: 2px solid var(--verde-viva);
+      color: var(--verde-viva);
+      font-weight: 800;
+      font-family: Montserrat, Arial, sans-serif;
+      background: var(--branco);
+    }
+
+    .notice {
+      margin: 18px 0;
+      padding: 12px 14px;
+      border-left: 5px solid var(--amarelo-alerta);
+      background: #fff7df;
+      font-weight: 700;
+    }
+
+    .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 0 0 22px;
+      color: #536167;
+      font-size: 0.9rem;
+    }
+
+    .meta-row span {
+      padding: 6px 10px;
+      border: 1px solid var(--cinza-nevoa);
+      background: var(--branco);
+    }
+
+    .kpis {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 12px;
+      margin: 20px 0 22px;
+    }
+
+    .card, .panel {
+      background: var(--branco);
+      border: 1px solid var(--cinza-nevoa);
+      border-radius: 8px;
+      box-shadow: 0 8px 20px rgba(37, 50, 56, 0.06);
+    }
+
+    .card {
+      padding: 14px;
+      min-height: 118px;
+    }
+
+    .label {
+      color: #5f6c70;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      font-weight: 800;
+    }
+
+    .value {
+      margin-top: 8px;
+      color: var(--grafite);
+      font-size: clamp(1.25rem, 2.2vw, 1.9rem);
+      font-weight: 800;
+      line-height: 1.05;
+    }
+
+    .value.bad { color: var(--vermelho-risco); }
+    .value.good { color: var(--verde-viva); }
+    .note {
+      margin-top: 8px;
+      color: #627177;
+      font-size: 0.82rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.35fr 1fr;
+      gap: 14px;
+      align-items: start;
+    }
+
+    .panel {
+      padding: 16px;
+      margin-bottom: 14px;
+      overflow: hidden;
+    }
+
+    .chart-wrap {
+      width: 100%;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+
+    svg {
+      display: block;
+      min-width: 760px;
+      width: 100%;
+      height: auto;
+    }
+
+    .legend {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+      font-size: 0.86rem;
+      color: #536167;
+    }
+
+    .legend span::before {
+      content: "";
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      margin-right: 6px;
+      vertical-align: -1px;
+      background: var(--verde-viva);
+    }
+
+    .legend .target::before { background: var(--terracota-casa); }
+    .legend .risk::before { background: var(--vermelho-risco); }
+    .legend .alert::before { background: var(--amarelo-alerta); }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    th, td {
+      padding: 9px 8px;
+      border-bottom: 1px solid var(--cinza-nevoa);
+      text-align: left;
+      vertical-align: middle;
+    }
+
+    th {
+      color: var(--verde-viva);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+    }
+
+    .bar-cell {
+      min-width: 130px;
+    }
+
+    .bar-track {
+      width: 100%;
+      height: 10px;
+      background: #edf1ee;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .bar {
+      height: 100%;
+      background: var(--verde-viva);
+      border-radius: 999px;
+    }
+
+    .bar.risk { background: var(--vermelho-risco); }
+    .bar.alert { background: var(--amarelo-alerta); }
+    .bar.accent { background: var(--terracota-casa); }
+
+    .priorities {
+      display: grid;
+      gap: 10px;
+      counter-reset: item;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .priorities li {
+      counter-increment: item;
+      display: grid;
+      grid-template-columns: 34px 1fr;
+      gap: 10px;
+      align-items: start;
+      padding: 12px;
+      background: #fffdf8;
+      border: 1px solid var(--cinza-nevoa);
+      border-radius: 8px;
+    }
+
+    .priorities li::before {
+      content: counter(item);
+      display: grid;
+      place-items: center;
+      width: 28px;
+      height: 28px;
+      color: var(--branco);
+      background: var(--verde-viva);
+      border-radius: 999px;
+      font-weight: 800;
+    }
+
+    footer {
+      margin-top: 18px;
+      padding-top: 16px;
+      border-top: 1px solid var(--cinza-nevoa);
+      color: #5e6d72;
+      font-size: 0.86rem;
+    }
+
+    @media (max-width: 980px) {
+      .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 620px) {
+      .shell { width: min(100% - 20px, 1180px); padding-top: 12px; }
+      header { grid-template-columns: 1fr; }
+      .kpis { grid-template-columns: 1fr; }
+      table { font-size: 0.82rem; }
+      th, td { padding: 8px 6px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header>
+      <div>
+        <h1>Dashboard Executivo VivaCasa</h1>
+        <p class="subtitle">Visao demonstrativa de receita, margem, estoque, marketing, conversão e CAC para o diagnóstico Q4 2026.</p>
+      </div>
+      <div class="vc-mark" aria-label="Monograma VivaCasa">VC</div>
+    </header>
+
+    <div class="notice">Dados fictícios para demonstração. Nao usar para decisoes reais sem validação das fontes e formulas.</div>
+
+    <div class="meta-row" aria-label="Metadados do dashboard">
+      <span>Periodo analisado: janeiro a agosto de 2026</span>
+      <span>Atualizado em: 2026-09-10</span>
+      <span>Fonte: CSVs em intake/raw</span>
+    </div>
+
+    <section class="kpis" aria-label="Indicadores principais">
+      <article class="card">
+        <div class="label">Receita realizada</div>
+        <div class="value good">R$ 10,55 mi</div>
+        <div class="note">Acumulado jan-ago 2026</div>
+      </article>
+      <article class="card">
+        <div class="label">Meta acumulada</div>
+        <div class="value">R$ 11,29 mi</div>
+        <div class="note">Soma das metas mensais</div>
+      </article>
+      <article class="card">
+        <div class="label">Gap absoluto</div>
+        <div class="value bad">-R$ 740 mil</div>
+        <div class="note">Realizado menos meta</div>
+      </article>
+      <article class="card">
+        <div class="label">Gap percentual</div>
+        <div class="value bad">-6,55%</div>
+        <div class="note">Gap sobre meta acumulada</div>
+      </article>
+      <article class="card">
+        <div class="label">Margem media</div>
+        <div class="value">30,40%</div>
+        <div class="note">Media simples jan-ago</div>
+      </article>
+    </section>
+
+    <section class="grid">
+      <article class="panel">
+        <h2>Receita Versus Meta por Mes</h2>
+        <div class="chart-wrap">
+          <svg viewBox="0 0 900 360" role="img" aria-label="Grafico de barras comparando receita realizada e meta por mes">
+            <rect x="0" y="0" width="900" height="360" fill="#fffaf4"></rect>
+            <g stroke="#D8E0DC" stroke-width="1">
+              <line x1="70" y1="40" x2="850" y2="40"></line>
+              <line x1="70" y1="88" x2="850" y2="88"></line>
+              <line x1="70" y1="136" x2="850" y2="136"></line>
+              <line x1="70" y1="184" x2="850" y2="184"></line>
+              <line x1="70" y1="232" x2="850" y2="232"></line>
+              <line x1="70" y1="280" x2="850" y2="280"></line>
+            </g>
+            <g fill="#536167" font-size="12" font-family="Inter, Arial, sans-serif">
+              <text x="20" y="44">1,5 mi</text>
+              <text x="20" y="92">1,2 mi</text>
+              <text x="20" y="140">0,9 mi</text>
+              <text x="20" y="188">0,6 mi</text>
+              <text x="20" y="236">0,3 mi</text>
+              <text x="36" y="284">0</text>
+            </g>
+            <g>
+              <rect x="88" y="82" width="28" height="198" fill="#1F6B5C"></rect>
+              <rect x="120" y="69" width="28" height="211" fill="#D87855"></rect>
+              <rect x="183" y="78" width="28" height="202" fill="#1F6B5C"></rect>
+              <rect x="215" y="66" width="28" height="214" fill="#D87855"></rect>
+              <rect x="278" y="72" width="28" height="208" fill="#1F6B5C"></rect>
+              <rect x="310" y="61" width="28" height="219" fill="#D87855"></rect>
+              <rect x="373" y="69" width="28" height="211" fill="#1F6B5C"></rect>
+              <rect x="405" y="56" width="28" height="224" fill="#D87855"></rect>
+              <rect x="468" y="64" width="28" height="216" fill="#1F6B5C"></rect>
+              <rect x="500" y="51" width="28" height="229" fill="#D87855"></rect>
+              <rect x="563" y="67" width="28" height="213" fill="#1F6B5C"></rect>
+              <rect x="595" y="48" width="28" height="232" fill="#D87855"></rect>
+              <rect x="658" y="59" width="28" height="221" fill="#1F6B5C"></rect>
+              <rect x="690" y="43" width="28" height="237" fill="#D87855"></rect>
+              <rect x="753" y="61" width="28" height="219" fill="#1F6B5C"></rect>
+              <rect x="785" y="40" width="28" height="240" fill="#D87855"></rect>
+            </g>
+            <line x1="70" y1="280" x2="850" y2="280" stroke="#253238" stroke-width="1.2"></line>
+            <g fill="#253238" font-size="12" font-family="Inter, Arial, sans-serif" text-anchor="middle">
+              <text x="118" y="310">Jan</text>
+              <text x="213" y="310">Fev</text>
+              <text x="308" y="310">Mar</text>
+              <text x="403" y="310">Abr</text>
+              <text x="498" y="310">Mai</text>
+              <text x="593" y="310">Jun</text>
+              <text x="688" y="310">Jul</text>
+              <text x="783" y="310">Ago</text>
+            </g>
+          </svg>
+        </div>
+        <div class="legend">
+          <span>Receita realizada</span>
+          <span class="target">Meta</span>
+        </div>
+      </article>
+
+      <article class="panel">
+        <h2>Prioridades dos Próximos 90 Dias</h2>
+        <ol class="priorities">
+          <li>Validar fórmulas de receita líquida, margem, ruptura, conversão e CAC.</li>
+          <li>Cruzar campanhas pagas com disponibilidade dos produtos promovidos.</li>
+          <li>Criar rotina semanal de SKUs prioritários em risco de ruptura.</li>
+          <li>Separar receita atribuída de receita incremental por canal.</li>
+          <li>Definir donos dos indicadores e cadência executiva mensal.</li>
+        </ol>
+      </article>
+    </section>
+
+    <section class="grid">
+      <article class="panel">
+        <h2>Ruptura por Categoria</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Categoria</th>
+              <th>Jan</th>
+              <th>Ago</th>
+              <th>Visual</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Organização</td><td>8,2%</td><td>11,8%</td><td class="bar-cell"><div class="bar-track"><div class="bar risk" style="width: 100%"></div></div></td></tr>
+            <tr><td>Cozinha e mesa</td><td>7,1%</td><td>10,3%</td><td class="bar-cell"><div class="bar-track"><div class="bar risk" style="width: 87%"></div></div></td></tr>
+            <tr><td>Decoração</td><td>6,4%</td><td>9,1%</td><td class="bar-cell"><div class="bar-track"><div class="bar risk" style="width: 77%"></div></div></td></tr>
+            <tr><td>Banheiro e lavanderia</td><td>5,8%</td><td>8,6%</td><td class="bar-cell"><div class="bar-track"><div class="bar risk" style="width: 73%"></div></div></td></tr>
+            <tr><td>Pequenos móveis</td><td>4,9%</td><td>7,8%</td><td class="bar-cell"><div class="bar-track"><div class="bar risk" style="width: 66%"></div></div></td></tr>
+          </tbody>
+        </table>
+      </article>
+
+      <article class="panel">
+        <h2>Investimento por Canal</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Canal</th>
+              <th>Jan</th>
+              <th>Ago</th>
+              <th>Visual</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Busca paga</td><td>R$ 82 mil</td><td>R$ 108 mil</td><td class="bar-cell"><div class="bar-track"><div class="bar accent" style="width: 100%"></div></div></td></tr>
+            <tr><td>Social paga</td><td>R$ 76 mil</td><td>R$ 99 mil</td><td class="bar-cell"><div class="bar-track"><div class="bar accent" style="width: 92%"></div></div></td></tr>
+            <tr><td>E-mail</td><td>R$ 18 mil</td><td>R$ 22 mil</td><td class="bar-cell"><div class="bar-track"><div class="bar accent" style="width: 20%"></div></div></td></tr>
+            <tr><td>WhatsApp autorizado</td><td>R$ 9 mil</td><td>R$ 14 mil</td><td class="bar-cell"><div class="bar-track"><div class="bar accent" style="width: 13%"></div></div></td></tr>
+            <tr><td>Organico</td><td>R$ 0</td><td>R$ 0</td><td class="bar-cell"><div class="bar-track"><div class="bar accent" style="width: 0%"></div></div></td></tr>
+          </tbody>
+        </table>
+      </article>
+    </section>
+
+    <section class="grid">
+      <article class="panel">
+        <h2>Conversão por Canal</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Canal</th>
+              <th>Jan</th>
+              <th>Ago</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Busca paga</td><td>2,8%</td><td>2,5%</td><td><span class="value bad" style="font-size: 1rem">queda</span></td></tr>
+            <tr><td>Social paga</td><td>2,1%</td><td>1,9%</td><td><span class="value bad" style="font-size: 1rem">queda</span></td></tr>
+            <tr><td>E-mail</td><td>7,1%</td><td>7,8%</td><td><span class="value good" style="font-size: 1rem">alta</span></td></tr>
+            <tr><td>WhatsApp autorizado</td><td>8,4%</td><td>9,1%</td><td><span class="value good" style="font-size: 1rem">alta</span></td></tr>
+            <tr><td>Organico</td><td>3,5%</td><td>3,8%</td><td><span class="value good" style="font-size: 1rem">alta</span></td></tr>
+          </tbody>
+        </table>
+      </article>
+
+      <article class="panel">
+        <h2>CAC por Canal</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Canal</th>
+              <th>CAC ago</th>
+              <th>Visual</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Busca paga</td><td>R$ 45,19</td><td class="bar-cell"><div class="bar-track"><div class="bar alert" style="width: 86%"></div></div></td></tr>
+            <tr><td>Social paga</td><td>R$ 52,38</td><td class="bar-cell"><div class="bar-track"><div class="bar alert" style="width: 100%"></div></div></td></tr>
+            <tr><td>E-mail</td><td>R$ 18,44</td><td class="bar-cell"><div class="bar-track"><div class="bar" style="width: 35%"></div></div></td></tr>
+            <tr><td>WhatsApp autorizado</td><td>R$ 12,75</td><td class="bar-cell"><div class="bar-track"><div class="bar" style="width: 24%"></div></div></td></tr>
+            <tr><td>Organico</td><td>R$ 0,00</td><td class="bar-cell"><div class="bar-track"><div class="bar" style="width: 0%"></div></div></td></tr>
+          </tbody>
+        </table>
+        <p class="note">CAC informado no CSV. O arquivo nao traz clientes novos por canal para recalculo independente.</p>
+      </article>
+    </section>
+
+    <footer>
+      <strong>Fontes dos dados:</strong>
+      `intake/raw/resultados-vendas-2025-2026.csv`,
+      `intake/raw/resultados-estoque-2026.csv`,
+      `intake/raw/resultados-marketing-2026.csv`,
+      `templates/brand/brand-guide-vivacasa.md`.
+      <br>
+      Identidade visual: Verde Viva #1F6B5C, Terracota Casa #D87855, Areia Clara #F5EFE6, Grafite #253238, Cinza Nevoa #D8E0DC, Amarelo Alerta #E2B84B, Vermelho Risco #B9534B.
+    </footer>
+  </main>
+</body>
+</html>
